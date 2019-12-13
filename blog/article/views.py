@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
+from django.contrib import messages
 
 from article.models import Article,Comment
 from article.forms import ArticleForm
@@ -18,8 +19,10 @@ def articleCreate(request):
            * validate the form and display error messages if the form is invalid
            * else, save it to the model and redirect to the article page
     '''
+    
     template = 'article/articleCreate.html'
     if request.method == 'GET':
+       
         return render(request, template, {'articleForm':ArticleForm()})
     # POST
     articleForm = ArticleForm(request.POST)
@@ -27,4 +30,6 @@ def articleCreate(request):
         return render(request, template, {'articleForm':articleForm})
 
     articleForm.save()
-    return article(request)
+    messages.success(request, '文章已新增')
+    
+    return redirect('article:article')
